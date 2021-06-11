@@ -29,7 +29,10 @@ public class LibraryManageImpl implements LibraryManage {
 	@Override
 	public int getFine(String name, int id) throws Exception {
 		int lateFee = manager.getLateFee(id);
-		int fine = (Period.between(LocalDate.now(), manager.getIssueDate(name, id)).getDays() - Book.getIssueduration())* lateFee;
+		int period = Period.between(manager.getIssueDate(name, id), LocalDate.now()).getDays();
+		int fine = 0;
+		if(period>7)
+			fine = (period - Book.getIssueduration())* lateFee;
 		return fine;
 	}
 
@@ -47,5 +50,4 @@ public class LibraryManageImpl implements LibraryManage {
 	public LocalDate getIssueDate(String name, int id) throws Exception {
 		return manager.getIssueDate(name, id);
 	}
-
 }

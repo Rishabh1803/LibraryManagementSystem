@@ -41,21 +41,23 @@ public class LibraryManagementSystemDaoImp implements LibraryManagementSystemDAO
 		int rowsEmployee = statementEmp.executeUpdate();
 		PreparedStatement statementBook = connection.prepareStatement("update Book set stock = stock + 1 where BookId = ?");
 		statementBook.setInt(1, id);
-		int rowsBook = statementBook.executeUpdate();
+		statementBook.executeUpdate();
 		connection.close();
-		if(rowsBook == rowsEmployee)
+		if(rowsEmployee > 0)
 			return true;
 		return false;
 	}
 	@Override
 	public LocalDate getIssueDate(String name, int id) throws Exception{
-		LocalDate date;
+		LocalDate date = null;
 		Connection connection = MySQLConnection.makeConnection();
-		PreparedStatement statementEmp = connection.prepareStatement("select IssueDate from Employee where EmployeeName = ? and BookId = ?");
-		statementEmp.setString(1, name);
-		statementEmp.setInt(2, id);
-		Date datesql = statementEmp.executeQuery().getDate(1);
-		date = LocalDate.parse(datesql.toString());
+		PreparedStatement statement = connection.prepareStatement("select IssueDate from Employee where EmployeeName = ? and BookId = ?");
+		statement.setString(1, name);
+		statement.setInt(2, id);
+		ResultSet set = statement.executeQuery();
+		set.next();
+		String datesql = set.getString(1);
+		date = LocalDate.parse(datesql);
 		connection.close();
 		return date;
 	}
@@ -120,10 +122,9 @@ public class LibraryManagementSystemDaoImp implements LibraryManagementSystemDAO
 		ResultSet set = statement.executeQuery();
 		int lateFee = 0;
 		if(set.next()) {
-			lateFee = set.getInt(1);
+			lateFee = set.getInt("lateFee");
 		}
 		connection.close();
 		return lateFee;
 	}
-
 }
