@@ -70,15 +70,20 @@ public class LibraryManagementSystemDaoImp implements LibraryManagementSystemDAO
 		PreparedStatement statementEmp = connection.prepareStatement("select * from Employee where EmployeeName = ?");
 		statementEmp.setString(1, name);
 		ResultSet s = statementEmp.executeQuery();
+		boolean flag = false;
 		while(s.next()) {
 			Employee employee = new Employee();
 			employee.setName(s.getString(1));
 			employee.setBookId(s.getInt(2));
 			employee.setIssueDate(LocalDate.parse(s.getDate(3).toString()));
 			employees.add(employee);
+			flag = true;
 		}
 		connection.close();
-		return employees;
+		if(flag)
+			return employees;
+		else
+			return null;
 	}
 
 	@Override

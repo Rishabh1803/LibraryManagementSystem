@@ -27,7 +27,7 @@ public class PresentationImpl implements Presentation {
 		try {
 			System.out.println("=============================================");
 			System.out.println("Available Books");
-			System.out.println("---------------------------------------------");
+			System.out.println("---------------");
 			for(Book b : manager.getAllBooks())
 				System.out.println(b);
 			System.out.println("=============================================");
@@ -54,7 +54,7 @@ public class PresentationImpl implements Presentation {
 						if(manager.issueBook(nameIssue,id))
 							System.out.println("Issued Successfully!\n");
 					} catch (Exception e) {
-						System.out.println(e);
+						System.out.println("\nWorng Input!");
 					}
 					break;
 			case 2: showAvailableBooks();
@@ -65,17 +65,22 @@ public class PresentationImpl implements Presentation {
 					String nameReturn = sc.nextLine();
 					int fine = 0;
 					try {
-						fine = manager.getFine(nameReturn, Id);
+						try{
+							fine = manager.getFine(nameReturn, Id);
+						}catch(Exception e) {
+							System.out.println("\nERROR 404! Record Not Found!!");
+						}
 						if(manager.returnBook(nameReturn, Id))
 							System.out.println("\nBook Returned Successfully");
 						else {
-							System.out.println("ERROR 404! Record Not Found!!");
 							break conditional;
 						}
 						if(fine == 0) {
 							System.out.println("No Fine is applicable as the book was returned on time");
 						}
 						System.out.println("=============================================");
+						System.out.println("Details: ");
+						System.out.println("---------------");
 						System.out.println("Name of Employee: "+nameReturn);
 						System.out.println("Book Id: " + Id);
 						System.out.println("Return Date: " + LocalDate.now());
@@ -91,11 +96,12 @@ public class PresentationImpl implements Presentation {
 						Collection<Employee> employees = manager.getAllIssuedBooks(name);
 						System.out.println();
 						if(employees == null)
-							System.out.println("No Record Found!!");
+							System.out.println("ERROR 404! Record Not Found!!");
 						else {
 							System.out.println("=============================================");
-							for(Employee emp:employees)
+							for(Employee emp:employees) {
 								System.out.println(emp);
+							}
 							System.out.println("=============================================");
 						}
 					} catch (Exception e) {

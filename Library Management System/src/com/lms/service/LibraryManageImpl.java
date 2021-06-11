@@ -31,7 +31,7 @@ public class LibraryManageImpl implements LibraryManage {
 		int lateFee = manager.getLateFee(id);
 		int period = Period.between(manager.getIssueDate(name, id), LocalDate.now()).getDays();
 		int fine = 0;
-		if(period>7)
+		if(period>Book.getIssueduration())
 			fine = (period - Book.getIssueduration())* lateFee;
 		return fine;
 	}
